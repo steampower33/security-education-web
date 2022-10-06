@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django File Upload</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+        * {
+            font-family: "Roboto";
+        }
+
+        body {
+            background-color: #F5F5F5;
+        }
+
+        form {
+            background-color: #FFFFFF;
+            padding: 25px;
+        }
+
+        table {
+            width: 100%; 
+            text-align: center;
+            margin-top: 25px;
+            padding: 25px;
+            background-color: #FFFFFF;
+        }
+
+        table tr td {
+            padding-top: 15px;            
+        }
+    </style>
+</head>
+<body>
+    <form action="{% url 'Core:uploadFile' %}" method="POST" enctype="multipart/form-data">
+        <input type="text" name="fileTitle" placeholder="Enter a title">
+        <input type="file" name="uploadedFile">
+        {% csrf_token %}
+        <input type="submit" value="Upload">
+    </form>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>File Path</th>
+            <th>Upload Date & Time</th>
+        </tr>
+        {% for file in files %}
+            <tr>
+                <td>{{ file.id }}</td>
+                <td>{{ file.title }}</td>
+                <td>{{ file.uploadedFile.url }}</td>
+                <td>{{ file.dateTimeOfUpload }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

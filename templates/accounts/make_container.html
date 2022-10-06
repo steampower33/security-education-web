@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container my-3">
+        {% csrf_token %}
+        <h1 class="display-1">이미지 실행</h1>
+
+        <button type="button" class="btn btn-primary">{{ result }}</button>
+        <a></a>
+    </div>
+{% endblock %}
