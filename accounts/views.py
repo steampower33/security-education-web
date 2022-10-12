@@ -22,7 +22,13 @@ def signup(request):
     return render(request, 'accounts/signup.html', {'form': form})
 
 def upload(request):
-    media_path = '/Users/seungminlee/Documents/CreamHack/media/'
+    abs_path = os.getcwd().split(os.path.sep)
+    media_path = '/'
+    for _ in range(1, len(abs_path)):
+        media_path += abs_path[_]
+        media_path += '/'
+    media_path += 'media/'
+
     image_list = os.listdir(media_path)
     result = ''
     if request.method == 'POST' and request.FILES['myfile']:
@@ -46,7 +52,13 @@ def upload(request):
     return render(request, 'accounts/upload.html',)
 
 def images(request):
-    media_path = '/Users/seungminlee/Documents/CreamHack/media/'
+    abs_path = os.getcwd().split(os.path.sep)
+    media_path = '/'
+
+    for _ in range(1, len(abs_path)):
+        media_path += abs_path[_]
+        media_path += '/'
+    media_path += 'media/'
     image_list = os.listdir(media_path)
 
     print(image_list)
