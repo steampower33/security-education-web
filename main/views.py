@@ -1,9 +1,14 @@
+from email import message
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from .models import ClassRoom
 from .forms import ClassRoomForm, CommentForm
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
+def educator_group_check(user):
+    return "educator" in user.groups.all()
 
 def index(request):
     page = request.GET.get('page', '1')
@@ -18,6 +23,21 @@ def detail(request, classroom_id):
     classroom = get_object_or_404(ClassRoom, pk=classroom_id)
     context = {'classroom': classroom}
     return render(request, 'main/classroom_detail.html', context)
+
+@login_required(login_url='accounts:login')
+def classroom_create(request):
+    if request.method == 'POST':
+        form = ClassRoomForm(request.POST)
+        if form.is_valid():
+            classroom = form.save(commit=False)
+            classroom.author = request.user # author 속성에 로그인 계정 저장
+            classroom.create_date = timezone.now()
+            classroom.save()
+            return redirect('main:index')
+    else:
+        form = ClassRoomForm()
+    context = {'form': form}
+    return render(request, 'main/classroom_form.html', context)
 
 @login_required(login_url='accounts:login')
 def comment_create(request, classroom_id):
@@ -37,17 +57,20 @@ def comment_create(request, classroom_id):
     return render(request, 'main/classroom_detail.html', context)
 
 @login_required(login_url='accounts:login')
-def classroom_create(request):
+def classroom_modify(request, classroom_id):
+    classroom = get_object_or_404(ClassRoom, pk=classroom_id)
+    if request.user != classroom.author:
+        messages.error(request, '수정권한이 없습니다')
+        return redirect('main:detail', classroom_id=classroom.id)
+
     if request.method == 'POST':
         form = ClassRoomForm(request.POST)
         if form.is_valid():
             classroom = form.save(commit=False)
-            classroom.author = request.user # author 속성에 로그인 계정 저장
-            classroom.create_date = timezone.now()
+            classroom.modify_date = timezone.now()
             classroom.save()
-            return redirect('main:index')
+            return redirect('main:index', classroom_id=classroom.id)
     else:
-        form = ClassRoomForm()
+        form = ClassRoomForm(instance=classroom)
     context = {'form': form}
     return render(request, 'main/classroom_form.html', context)
-

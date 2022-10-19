@@ -72,6 +72,11 @@
         {% endif %}
     </ul>
     <!-- 페이징처리 끝 -->
+    {% for group in user.groups.all %}
+    {% if group.name == 'educator' %}
     <a href="{% url 'main:classroom_create' %}" class="btn btn-primary">수업 등록하기</a>
+    {% else %}
+    {% endif %}
+    {% endfor %}
 </div>
 {% endblock %}

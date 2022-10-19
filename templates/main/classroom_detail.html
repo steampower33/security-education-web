@@ -1,7 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container my-3">
-    <!-- 질문 -->
+    <!-- message 표시 -->
+    {% if messages %}
+    <div class="alert alert-danger my-3" role="alert">
+    {% for message in messages %}
+        <strong>{{ message.tags }}</strong>
+        <ul><li>{{ message.message }}</li></ul>
+    {% endfor %}
+    </div>
+    {% endif %}
+    <!-- 수업 생성 -->
     <h2 class="border-bottom py-2">{{ classroom.subject }}</h2>
     <div class="card my-3">
         <div class="card-body">
@@ -11,9 +20,15 @@
                     {{ classroom.create_date }}
                 </div>
             </div>
+            <div class="my-3">
+                {% if request.user == classroom.author %}
+                <a href="{% url 'main:classroom_modify' classroom.id %}" 
+                   class="btn btn-sm btn-outline-secondary">수정</a>
+                {% endif %}
+            </div>
         </div>
     </div>
-    <!-- 답변 -->
+    <!-- 댓글 -->
     <h5 class="border-bottom my-3 py-2">{{classroom.comment_set.count}}개의 답변이 있습니다.</h5>
     {% for comment in classroom.comment_set.all %}
     <div class="card my-3">
@@ -27,7 +42,7 @@
         </div>
     </div>
     {% endfor %}
-    <!-- 답변 등록 -->
+    <!-- 댓글 등록 -->
     <form action="{% url 'main:comment_create' classroom.id %}" method="post" class="my-3">
         {% csrf_token %}
         <!-- 오류표시 Start -->

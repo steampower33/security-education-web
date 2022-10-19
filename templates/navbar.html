@@ -24,6 +24,8 @@
                     <a class="nav-link" href="{% url 'accounts:signup' %}">회원가입</a>
                     {% endif %}
                 </li>
+                {% for group in user.groups.all %}
+                {% if group.name == 'educator' %}
                 <li>
                     {% if user.is_authenticated %}
                     <a class="nav-link" href="{% url 'accounts:upload' %}">업로드</a>
@@ -34,6 +36,9 @@
                     <a class="nav-link" href="{% url 'accounts:images' %}">이미지 목록</a>
                     {% endif %}
                 </li>
+                {% else %}
+                {% endif %}
+                {% endfor %}
             </ul>
         </div>
     </div>
