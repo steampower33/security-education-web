@@ -4,32 +4,34 @@
 <div class="container my-3">
     <table class="table">
         <thead>
-        <tr class="table-dark">
-            <th>번호</th>
-            <th>제목</th>
-            <th>작성일시</th>
-        </tr>
+            <tr class="text-center table-dark">
+                <th>번호</th>
+                <th style="width:50%">제목</th>
+                <th>글쓴이</th>
+                <th>작성일시</th>
+            </tr>
         </thead>
         <tbody>
         {% if classroom_list %}
         {% for classroom in classroom_list %}
-        <tr>
+        <tr class="text-center">
             <td>
                 <!-- 번호 = 전체건수 - 시작인덱스 - 현재인덱스 + 1 -->
                 {{ classroom_list.paginator.count|sub:classroom_list.start_index|sub:forloop.counter0|add:1 }}
             </td>
-            <td>
+            <td class="text-start">
                 <a href="{% url 'main:detail' classroom.id %}">{{ classroom.subject }}</a>
                 {% if classroom.comment_set.count > 0 %}
                 <span class="text-danger small mx-2">{{ classroom.comment_set.count }}</span>
                 {% endif %}
             </td>
+            <td>{{ classroom.author.username }}</td>
             <td>{{ classroom.create_date }}</td>
         </tr>
         {% endfor %}
         {% else %}
         <tr>
-            <td colspan="3">수업이 없습니다.</td>
+            <td colspan="4">수업이 없습니다.</td>
         </tr>
         {% endif %}
         </tbody>

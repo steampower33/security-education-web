@@ -16,8 +16,15 @@
         <div class="card-body">
             <div class="card-text" style="white-space: pre-line;">{{ classroom.content }}</div>
             <div class="d-flex justify-content-end">
-                <div class="badge bg-light text-dark p-2">
-                    {{ classroom.create_date }}
+                {% if classroom.modify_date %}
+                <div class="badge bg-light text-dark p-2 text-start mx-3">
+                    <div class="mb-2">modified at</div>
+                    <div>{{ classroom.modify_date }}</div>
+                </div>
+                {% endif %}
+                <div class="badge bg-light text-dark p-2 text-start">
+                    <div class="mb-2">{{ classroom.author.username }}</div>
+                    <div>{{ classroom.create_date }}</div>
                 </div>
             </div>
             <div class="my-3">
@@ -37,9 +44,24 @@
         <div class="card-body">
             <div class="card-text" style="white-space: pre-line;">{{ comment.content }}</div>
             <div class="d-flex justify-content-end">
-                <div class="badge bg-light text-dark p-2">
-                    {{ comment.create_date }}
+                {% if comment.modify_date %}
+                <div class="badge bg-light text-dark p-2 text-start mx-3">
+                    <div class="mb-2">modified at</div>
+                    <div>{{ comment.modify_date }}</div>
                 </div>
+                {% endif %}
+                <div class="badge bg-light text-dark p-2 text-start">
+                    <div class="mb-2">{{ comment.author.username }}</div>
+                    <div>{{ comment.create_date }}</div>
+                </div>
+            </div>
+            <div class="my-3">
+                {% if request.user == comment.author %}
+                <a href="{% url 'main:comment_modify' comment.id  %}" 
+                    class="btn btn-sm btn-outline-secondary">수정</a>
+                <a href="#" class="delete btn btn-sm btn-outline-secondary "
+                    data-uri="{% url 'main:comment_delete' comment.id  %}">삭제</a>
+                {% endif %}
             </div>
         </div>
     </div>

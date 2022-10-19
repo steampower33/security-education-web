@@ -1,7 +1,7 @@
 from email import message
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
-from .models import ClassRoom
+from .models import ClassRoom, Comment
 from .forms import ClassRoomForm, CommentForm
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
@@ -64,15 +64,15 @@ def classroom_modify(request, classroom_id):
         return redirect('main:detail', classroom_id=classroom.id)
 
     if request.method == 'POST':
-        form = ClassRoomForm(request.POST)
+        form = ClassRoomForm(request.POST, instance=classroom)
         if form.is_valid():
             classroom = form.save(commit=False)
             classroom.modify_date = timezone.now()
             classroom.save()
-            return redirect('main:index', classroom_id=classroom.id)
+            return redirect('main:detail', classroom_id=classroom.id)
     else:
         form = ClassRoomForm(instance=classroom)
-    context = {'form': form}
+    context = {'classroom':classroom, 'form': form}
     return render(request, 'main/classroom_form.html', context)
 
 @login_required(login_url='accounts:login')
@@ -83,3 +83,31 @@ def classroom_delete(request, classroom_id):
         return redirect('main:detail', classroom_id=classroom.id)
     classroom.delete()
     return redirect('main:index')
+
+@login_required(login_url='common:login')
+def comment_modify(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+    if request.user != comment.author:
+        messages.error(request, '수정권한이 없습니다')
+        return redirect('main:detail', classroom_id=comment.classroom.id)
+
+    if request.method == "POST":
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.modify_date = timezone.now()
+            comment.save()
+            return redirect('main:detail', classroom_id=comment.classroom.id)
+    else:
+        form = CommentForm(instance=comment)
+    context = {'comment': comment, 'form': form}
+    return render(request, 'main/comment_form.html', context)
+
+@login_required(login_url='accounts:login')
+def comment_delete(request, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+    if request.user != comment.author:
+        messages.error(request, '삭제권한이 없습니다')
+    else:
+        comment.delete()
+    return redirect('main:detail', classroom_id=comment.classroom.id)
