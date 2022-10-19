@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import Question
+from .models import ClassRoom
 
-class QuestionAdmin(admin.ModelAdmin):
+class ClassRoomAdmin(admin.ModelAdmin):
     search_fields = ['subject']
 
-admin.site.register(Question, QuestionAdmin)
+admin.site.register(ClassRoom, ClassRoomAdmin)

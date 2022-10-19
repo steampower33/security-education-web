@@ -1,10 +1,10 @@
 from django import forms
-from main.models import Question
-from main.models import Answer
+from main.models import ClassRoom
+from main.models import Comment
 
-class QuestionForm(forms.ModelForm):
+class ClassRoomForm(forms.ModelForm):
     class Meta:
-        model = Question
+        model = ClassRoom
         fields = ['subject', 'content']
 
         labels = {
@@ -12,9 +12,9 @@ class QuestionForm(forms.ModelForm):
             'content': '내용',
         }
 
-class AnswerForm(forms.ModelForm):
+class CommentForm(forms.ModelForm):
     class Meta:
-        model = Answer
+        model = Comment
         fields = ['content']
         labels = {
             'content': '답변내용',

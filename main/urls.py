@@ -6,7 +6,7 @@ app_name = 'main'
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('<int:question_id>/', views.detail, name='detail'),
-    path('answer/create/<int:question_id>/', views.answer_create, name='answer_create'),
-    path('question/create/', views.question_create, name='question_create'),
+    path('<int:classroom_id>/', views.detail, name='detail'),
+    path('comment/create/<int:classroom_id>/', views.comment_create, name='comment_create'),
+    path('classroom/create/', views.classroom_create, name='classroom_create'),
 ]

@@ -1,9 +1,8 @@
-import re
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from accounts.forms import UserForm
 from accounts.docker import ExecDocker
-
+from django.contrib.auth.decorators import user_passes_test
 from django.core.files.storage import FileSystemStorage
 
 import os
