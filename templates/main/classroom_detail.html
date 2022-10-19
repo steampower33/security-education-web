@@ -23,7 +23,9 @@
             <div class="my-3">
                 {% if request.user == classroom.author %}
                 <a href="{% url 'main:classroom_modify' classroom.id %}" 
-                   class="btn btn-sm btn-outline-secondary">수정</a>
+                    class="btn btn-sm btn-outline-secondary">수정</a>
+                <a href="javascript:void(0)" class="delete btn btn-sm btn-outline-secondary"
+                    data-uri="{% url 'main:classroom_delete' classroom.id  %}">삭제</a>
                 {% endif %}
             </div>
         </div>
@@ -68,3 +70,15 @@
     </form>
 </div>
 {% endblock %}
+{% block script %}
+<script type='text/javascript'>
+const delete_elements = document.getElementsByClassName("delete");
+Array.from(delete_elements).forEach(function(element) {
+    element.addEventListener('click', function() {
+        if(confirm("정말로 삭제하시겠습니까?")) {
+            location.href = this.dataset.uri;
+        };
+    });
+});
+</script>
+{% endblock%}

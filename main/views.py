@@ -74,3 +74,12 @@ def classroom_modify(request, classroom_id):
         form = ClassRoomForm(instance=classroom)
     context = {'form': form}
     return render(request, 'main/classroom_form.html', context)
+
+@login_required(login_url='accounts:login')
+def classroom_delete(request, classroom_id):
+    classroom = get_object_or_404(ClassRoom, pk=classroom_id)
+    if request.user != classroom.author:
+        messages.error(request, '삭제권한이 없습니다')
+        return redirect('main:detail', classroom_id=classroom.id)
+    classroom.delete()
+    return redirect('main:index')
