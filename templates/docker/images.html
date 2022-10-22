@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container my-3">
     <h1 class="display-1">이미지 목록</h1>
-    <form method="POST" action="{% url 'accounts:make_container' %}">
+    <form method="POST" action="{% url 'docker:make_container' %}">
         {% csrf_token %}
         <select name="image" autofocus>
         {% for item in image_list %}

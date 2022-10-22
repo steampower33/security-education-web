@@ -1,15 +1,15 @@
-from email import message
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from .models import ClassRoom, Comment
 from .forms import ClassRoomForm, CommentForm
 from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 
 def educator_group_check(user):
-    return "educator" in user.groups.all()
+    return user.groups.filter(name = 'leaner').exists()
 
+# 수업 목록
 def index(request):
     page = request.GET.get('page', '1')
     classroom_list = ClassRoom.objects.order_by('-create_date')
@@ -19,11 +19,13 @@ def index(request):
     context = {'classroom_list': page_obj}
     return render(request, 'main/classroom_list.html', context)
 
+# 수업 내용
 def detail(request, classroom_id):
     classroom = get_object_or_404(ClassRoom, pk=classroom_id)
     context = {'classroom': classroom}
     return render(request, 'main/classroom_detail.html', context)
 
+# 수업 생성
 @login_required(login_url='accounts:login')
 def classroom_create(request):
     if request.method == 'POST':
@@ -39,6 +41,7 @@ def classroom_create(request):
     context = {'form': form}
     return render(request, 'main/classroom_form.html', context)
 
+# 댓글 생성
 @login_required(login_url='accounts:login')
 def comment_create(request, classroom_id):
     classroom = get_object_or_404(ClassRoom, pk=classroom_id)
@@ -56,6 +59,7 @@ def comment_create(request, classroom_id):
     context = {'classroom': classroom, 'form': form}
     return render(request, 'main/classroom_detail.html', context)
 
+# 수업 수정
 @login_required(login_url='accounts:login')
 def classroom_modify(request, classroom_id):
     classroom = get_object_or_404(ClassRoom, pk=classroom_id)
@@ -75,6 +79,7 @@ def classroom_modify(request, classroom_id):
     context = {'classroom':classroom, 'form': form}
     return render(request, 'main/classroom_form.html', context)
 
+# 수업 삭제
 @login_required(login_url='accounts:login')
 def classroom_delete(request, classroom_id):
     classroom = get_object_or_404(ClassRoom, pk=classroom_id)
@@ -84,6 +89,7 @@ def classroom_delete(request, classroom_id):
     classroom.delete()
     return redirect('main:index')
 
+# 댓글 수정
 @login_required(login_url='common:login')
 def comment_modify(request, comment_id):
     comment = get_object_or_404(Comment, pk=comment_id)
@@ -103,6 +109,7 @@ def comment_modify(request, comment_id):
     context = {'comment': comment, 'form': form}
     return render(request, 'main/comment_form.html', context)
 
+# 댓글 삭제
 @login_required(login_url='accounts:login')
 def comment_delete(request, comment_id):
     comment = get_object_or_404(Comment, pk=comment_id)

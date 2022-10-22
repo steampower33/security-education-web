@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('main/', include('main.urls')),
     path('accounts/', include('accounts.urls')),
+    path('docker/', include('docker.urls')),
     path('', views.index, name='index'), # '/'에 해당하는 path
 ]

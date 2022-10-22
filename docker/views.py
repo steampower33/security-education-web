@@ -1,24 +1,6 @@
-from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
-from accounts.forms import UserForm
-from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import render
 from django.core.files.storage import FileSystemStorage
-
 import os
-
-def signup(request):
-    if request.method == 'POST':
-        form = UserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)  # 사용자 인증
-            login(request, user)  # 로그인
-            return redirect('index')
-    else:
-        form = UserForm()
-    return render(request, 'accounts/signup.html', {'form': form})
 
 def upload(request):
     abs_path = os.getcwd().split(os.path.sep)
@@ -34,7 +16,7 @@ def upload(request):
         myfile = request.FILES['myfile']
         if str(myfile) in image_list:
             result = str(myfile) + 'is already exist in media'
-            return render(request, 'accounts/already.html', {'result': result})
+            return render(request, 'docker/already.html', {'result': result})
 
         fs = FileSystemStorage(location='media/', base_url='media/')
         # FileSystemStorage.save(file_name, file_content)
@@ -48,9 +30,10 @@ def upload(request):
         if 'Loaded' in result:
             send = ''.join(result[1:]) + ' was created successfully.'
 
-        return render(request, 'accounts/success_upload.html', {'result': send})
+        return render(request, 'docker/success_upload.html', {'result': send})
 
-    return render(request, 'accounts/upload.html',)
+    return render(request, 'docker/upload.html',)
+
 '''
 def images(request):
     abs_path = os.getcwd().split(os.path.sep)
@@ -63,7 +46,7 @@ def images(request):
     image_list = os.listdir(media_path)
 
     print(image_list)
-    return render(request, 'accounts/images.html', {'image_list': image_list})
+    return render(request, 'docker/images.html', {'image_list': image_list})
 '''
 
 def images(request):
@@ -78,7 +61,7 @@ def images(request):
 
     print(image_list)
 
-    return render(request, 'accounts/images.html', {'image_list': image_list})
+    return render(request, 'docker/images.html', {'image_list': image_list})
 
 def make_container(request):
     image = request.POST.get('image')
@@ -91,4 +74,4 @@ def make_container(request):
     result = result1.read()[:13]+","+result2.read()[:13]+","+result3.read()[:13]+" was created successfully"
     print(result)
 
-    return render(request, 'accounts/make_container.html', {'result': result})
+    return render(request, 'docker/make_container.html', {'result': result})
