@@ -6,8 +6,13 @@ from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 
+# 권한
 def educator_group_check(user):
-    return user.groups.filter(name = 'leaner').exists()
+    for _ in user.groups.all():
+        if _.name == 'educator':
+            print("Hello, educator")
+            return True
+    return False
 
 # 수업 목록
 def index(request):
@@ -26,7 +31,7 @@ def detail(request, classroom_id):
     return render(request, 'main/classroom_detail.html', context)
 
 # 수업 생성
-@login_required(login_url='accounts:login')
+@user_passes_test(educator_group_check, login_url='/main')
 def classroom_create(request):
     if request.method == 'POST':
         form = ClassRoomForm(request.POST)
@@ -60,7 +65,7 @@ def comment_create(request, classroom_id):
     return render(request, 'main/classroom_detail.html', context)
 
 # 수업 수정
-@login_required(login_url='accounts:login')
+@user_passes_test(educator_group_check, login_url='/main')
 def classroom_modify(request, classroom_id):
     classroom = get_object_or_404(ClassRoom, pk=classroom_id)
     if request.user != classroom.author:
@@ -80,7 +85,7 @@ def classroom_modify(request, classroom_id):
     return render(request, 'main/classroom_form.html', context)
 
 # 수업 삭제
-@login_required(login_url='accounts:login')
+@user_passes_test(educator_group_check, login_url='/main')
 def classroom_delete(request, classroom_id):
     classroom = get_object_or_404(ClassRoom, pk=classroom_id)
     if request.user != classroom.author:

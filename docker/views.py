@@ -34,21 +34,6 @@ def upload(request):
 
     return render(request, 'docker/upload.html',)
 
-'''
-def images(request):
-    abs_path = os.getcwd().split(os.path.sep)
-    media_path = '/'
-
-    for _ in range(1, len(abs_path)):
-        media_path += abs_path[_]
-        media_path += '/'
-    media_path += 'media/'
-    image_list = os.listdir(media_path)
-
-    print(image_list)
-    return render(request, 'docker/images.html', {'image_list': image_list})
-'''
-
 def images(request):
     result = os.popen('docker images').read().strip().split('\n')
 
