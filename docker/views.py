@@ -1,7 +1,17 @@
 from django.shortcuts import render
 from django.core.files.storage import FileSystemStorage
+from django.contrib.auth.decorators import user_passes_test
 import os
 
+# educator 접근 권한
+def educator_group_check(user):
+    for _ in user.groups.all():
+        if _.name == 'educator':
+            print("Hello, educator")
+            return True
+    return False
+
+@user_passes_test(educator_group_check, login_url='/main')
 def upload(request):
     abs_path = os.getcwd().split(os.path.sep)
     media_path = '/'
@@ -34,6 +44,7 @@ def upload(request):
 
     return render(request, 'docker/upload.html',)
 
+@user_passes_test(educator_group_check, login_url='/main')
 def images(request):
     result = os.popen('docker images').read().strip().split('\n')
 
@@ -48,6 +59,7 @@ def images(request):
 
     return render(request, 'docker/images.html', {'image_list': image_list})
 
+@user_passes_test(educator_group_check, login_url='/main')
 def make_container(request):
     image = request.POST.get('image')
     print('docker run -d -p 8081:80 ' + image)
