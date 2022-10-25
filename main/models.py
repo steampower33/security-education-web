@@ -5,6 +5,8 @@ class ClassRoom(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     subject = models.CharField(max_length=200)
     content = models.TextField()
+    container_cnt = models.CharField(max_length=10)
+    docker_image = models.CharField(max_length=100)
     create_date = models.DateTimeField()
     modify_date = models.DateTimeField(null=True, blank=True)
 
