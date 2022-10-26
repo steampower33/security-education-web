@@ -37,6 +37,20 @@
             </div>
         </div>
     </div>
+    <!-- 컨테이너 개수 만큼 버튼 생성 -->
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="mb-2">생성된 컨테이너</div>
+            <div class="d-flex flex-column">
+            {% with ''|center:classroom.container_cnt as range %}
+            {% for _ in range %}
+                <button type="button" class="btn btn-success">{{ forloop.counter }}</button>
+                <br>
+            {% endfor %}
+            {% endwith %}
+            </div>
+        </div>
+    </div>
     <!-- 댓글 -->
     <h5 class="border-bottom my-3 py-2">{{classroom.comment_set.count}}개의 답변이 있습니다.</h5>
     {% for comment in classroom.comment_set.all %}
