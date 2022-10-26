@@ -12,7 +12,6 @@ class ClassRoomForm(forms.ModelForm):
             'content': '내용',
             'container_cnt': '컨테이너_개수',
             'docker_image': '이미지',
-            
         }
 
 class CommentForm(forms.ModelForm):

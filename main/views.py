@@ -5,6 +5,7 @@ from .forms import ClassRoomForm, CommentForm
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
+import os
 
 # educator 접근 권한
 def educator_group_check(user):
@@ -13,6 +14,20 @@ def educator_group_check(user):
             print("Hello, educator")
             return True
     return False
+
+def images():
+    result = os.popen('docker images').read().strip().split('\n')
+
+    image_list = []
+
+    for _ in range(1, len(result)):
+        print(result[_])
+        result_split = result[_].split()
+        image_list.append(result_split[0])
+
+    print(image_list)
+
+    return image_list
 
 # 수업 목록
 def index(request):
@@ -33,6 +48,7 @@ def detail(request, classroom_id):
 # 수업 생성
 @user_passes_test(educator_group_check, login_url='/main')
 def classroom_create(request):
+    image_list = images() # images 정보 가져오기
     if request.method == 'POST':
         form = ClassRoomForm(request.POST)
         if form.is_valid():
@@ -43,7 +59,7 @@ def classroom_create(request):
             return redirect('main:index')
     else:
         form = ClassRoomForm()
-    context = {'form': form}
+    context = {'form': form, 'image_list': image_list}
     return render(request, 'main/classroom_form.html', context)
 
 # 댓글 생성
@@ -51,7 +67,7 @@ def classroom_create(request):
 def comment_create(request, classroom_id):
     classroom = get_object_or_404(ClassRoom, pk=classroom_id)
     if request.method == "POST":
-        form = CommentForm(request.POST)
+        form = CommentForm(request.POST) 
         if form.is_valid():
             comment = form.save(commit=False)
             comment.author = request.user # author 속성에 로그인 계정 저장

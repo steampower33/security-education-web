@@ -11,10 +11,29 @@
                 value="{{ form.subject.value|default_if_none:'' }}">
         </div>
         <div class="form-group">
-            <textarea type="text" class="form-control" name="content" id="content"  rows="10" 
+            <label for="content" class="form-label">내용</label>
+            <textarea type="text" class="form-control" name="content" id="content" rows="10"
                 value="{{ form.subject.value|default_if_none:'' }}"></textarea>
         </div>
-        <input type="submit" value="답변등록" class="btn btn-primary">
+        <div class="mb-3">
+            <label for="container_cnt" class="form-label">컨테이너 개수</label>
+            <div class="form-group">
+                <select type="number" class="form-control" name="container_cnt" id="container_cnt">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                </select>
+              </div>
+        </div>
+        <div class="my-3">
+            <label for="container_cnt" class="form-label">이미지 목록</label>
+            <select class="form-control" name="docker_image" id="docker_image" autofocus>
+                {% for item in image_list %}
+                    <option value="{{ item }}">{{ item }}</option>
+                {% endfor %}
+                </select>
+        </div>
+        <input type="submit" value="작성" class="btn btn-primary">
     </form>
 </div>
 {% endblock %}

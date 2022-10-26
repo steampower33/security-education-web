@@ -45,21 +45,6 @@ def upload(request):
     return render(request, 'docker/upload.html',)
 
 @user_passes_test(educator_group_check, login_url='/main')
-def images(request):
-    result = os.popen('docker images').read().strip().split('\n')
-
-    image_list = []
-
-    for _ in range(1, len(result)):
-        print(result[_])
-        result_split = result[_].split()
-        image_list.append(result_split[0])
-
-    print(image_list)
-
-    return render(request, 'docker/images.html', {'image_list': image_list})
-
-@user_passes_test(educator_group_check, login_url='/main')
 def make_container(request):
     image = request.POST.get('image')
     print('docker run -d -p 8081:80 ' + image)

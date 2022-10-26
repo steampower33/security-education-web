@@ -31,11 +31,6 @@
                     <a class="nav-link" href="{% url 'docker:upload' %}">업로드</a>
                     {% endif %}
                 </li>
-                <li>
-                    {% if user.is_authenticated %}
-                    <a class="nav-link" href="{% url 'docker:images' %}">이미지 목록</a>
-                    {% endif %}
-                </li>
                 {% else %}
                 {% endif %}
                 {% endfor %}
