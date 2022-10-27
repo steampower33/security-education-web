@@ -31,7 +31,6 @@ ALLOWED_HOSTS = ['127.0.0.1', '168.188.123.173']
 # Application definition
 
 INSTALLED_APPS = [
-    'docker.apps.DockerConfig',
     'accounts.apps.AccountsConfig',
     'main.apps.MainConfig',
     'django.contrib.admin',

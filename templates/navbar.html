@@ -28,7 +28,7 @@
                 {% if group.name == 'educator' %}
                 <li>
                     {% if user.is_authenticated %}
-                    <a class="nav-link" href="{% url 'docker:upload' %}">업로드</a>
+                    <a class="nav-link" href="{% url 'main:upload' %}">업로드</a>
                     {% endif %}
                 </li>
                 {% else %}

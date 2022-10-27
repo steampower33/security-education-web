@@ -5,6 +5,7 @@ from .forms import ClassRoomForm, CommentForm
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
+from django.core.files.storage import FileSystemStorage
 import os
 
 # educator 접근 권한
@@ -29,6 +30,55 @@ def images():
 
     return image_list
 
+# 컨테이너 생성
+@user_passes_test(educator_group_check, login_url='/main')
+def make_container(request):
+    image = request.POST.get('image')
+    print('docker run -d -p 8081:80 ' + image)
+    result =  ''
+    result1 = os.popen('docker run --name web1 -d -p 8081:80 ' + image)
+    result2 = os.popen('docker run -d --name web2 -p 8082:80 ' + image)
+    result3 = os.popen('docker run -d --name web3 -p 8083:80 ' + image)
+
+    result = result1.read()[:13]+","+result2.read()[:13]+","+result3.read()[:13]+" was created successfully"
+    print(result)
+
+    return render(request, 'docker/make_container.html', {'result': result})
+
+@user_passes_test(educator_group_check, login_url='/main')
+def upload(request):
+    abs_path = os.getcwd().split(os.path.sep)
+    media_path = '/'
+    for _ in range(1, len(abs_path)):
+        media_path += abs_path[_]
+        media_path += '/'
+    media_path += 'media/'
+
+    image_list = os.listdir(media_path)
+    result = ''
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
+        if str(myfile) in image_list:
+            result = str(myfile) + 'is already exist in media'
+            return render(request, 'docker/already.html', {'result': result})
+
+        fs = FileSystemStorage(location='media/', base_url='media/')
+        # FileSystemStorage.save(file_name, file_content)
+        filename = fs.save(myfile.name, myfile)
+
+        result = os.popen('docker load -i '+media_path+filename).read().strip().split('\n')
+        result = result[0].split()
+
+        send = ''
+        load_images_path = ''
+        if 'Loaded' in result:
+            send = ''.join(result[1:]) + ' was created successfully.'
+
+        return render(request, 'main/success_upload.html', {'result': send})
+
+    return render(request, 'main/upload.html',)
+
+
 # 수업 목록
 def index(request):
     page = request.GET.get('page', '1')
@@ -42,6 +92,8 @@ def index(request):
 # 수업 내용
 def detail(request, classroom_id):
     classroom = get_object_or_404(ClassRoom, pk=classroom_id)
+    #print("선택된 이미지 : ",classroom.docker_image)
+    #print("이미지 개수 : ",classroom.container_cnt)
     context = {'classroom': classroom}
     return render(request, 'main/classroom_detail.html', context)
 
@@ -56,6 +108,8 @@ def classroom_create(request):
             classroom.author = request.user # author 속성에 로그인 계정 저장
             classroom.create_date = timezone.now()
             classroom.save()
+            print("선택된 이미지 : ",classroom.docker_image)
+            print("이미지 개수 : ",classroom.container_cnt)
             return redirect('main:index')
     else:
         form = ClassRoomForm()
@@ -84,6 +138,7 @@ def comment_create(request, classroom_id):
 @user_passes_test(educator_group_check, login_url='/main')
 def classroom_modify(request, classroom_id):
     classroom = get_object_or_404(ClassRoom, pk=classroom_id)
+    image_list = images() # images 정보 가져오기
     if request.user != classroom.author:
         messages.error(request, '수정권한이 없습니다')
         return redirect('main:detail', classroom_id=classroom.id)
@@ -97,7 +152,7 @@ def classroom_modify(request, classroom_id):
             return redirect('main:detail', classroom_id=classroom.id)
     else:
         form = ClassRoomForm(instance=classroom)
-    context = {'classroom':classroom, 'form': form}
+    context = {'classroom':classroom, 'form': form, 'image_list': image_list}
     return render(request, 'main/classroom_form.html', context)
 
 # 수업 삭제
