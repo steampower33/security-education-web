@@ -103,7 +103,7 @@ def make_container(request, docker_image, container_cnt):
             links += 'http://127.0.0.1:'+port
         else:
             links += 'http://127.0.0.1:'+port+','
-        print(result)
+        print("생성된 컨테이너 : ", result.read())
     print(links)
 
     p = ''
@@ -185,6 +185,36 @@ def classroom_delete(request, classroom_id):
     if request.user != classroom.author:
         messages.error(request, '삭제권한이 없습니다')
         return redirect('main:detail', classroom_id=classroom.id)
+
+    ports = list()
+    links = classroom.links.split(',')
+    for _ in links:
+        ports.append(int(_.split(':')[-1]))
+
+    for _ in os.popen('docker ps -a').read().strip().split('\n')[1:]:
+        container_id = _.split()[0]
+        print("컨테이너 ID : ", container_id)
+
+        r = os.popen('docker port '+container_id).read()
+        container_port = r.split(':')[1]
+        print("컨테이너 Port : ", container_port)
+
+        w = ''
+        if int(container_port) in ports:
+            r = os.popen("docker rm -f "+container_id).read().strip()
+            print("컨테이너 삭제 결과 : ", r)
+
+            f = open("main/port.txt", 'r')
+            port_file = f.readline()
+            f.close()
+
+            w += container_port + ' '
+        
+        w += port_file
+        f = open("main/port.txt", 'w')
+        f.write(w)
+        f.close()
+
     classroom.delete()
     return redirect('main:index')
 
