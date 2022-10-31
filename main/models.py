@@ -9,6 +9,7 @@ class ClassRoom(models.Model):
     docker_image = models.CharField(max_length=100)
     create_date = models.DateTimeField()
     modify_date = models.DateTimeField(null=True, blank=True)
+    links = models.CharField(max_length=300, null=True, blank=True)
 
     def __str__(self):
         return self.subject

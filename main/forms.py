@@ -5,13 +5,14 @@ from main.models import Comment
 class ClassRoomForm(forms.ModelForm):
     class Meta:
         model = ClassRoom
-        fields = ['subject', 'content', 'container_cnt', 'docker_image']
+        fields = ['subject', 'content', 'container_cnt', 'docker_image', 'links']
 
         labels = {
             'subject': '제목',
             'content': '내용',
             'container_cnt': '컨테이너_개수',
             'docker_image': '이미지',
+            'links': '컨테이너링크',
         }
 
 class CommentForm(forms.ModelForm):

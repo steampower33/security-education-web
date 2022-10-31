@@ -1,3 +1,6 @@
+import os
+from collections import deque
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from .models import ClassRoom, Comment
@@ -6,7 +9,6 @@ from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
-import os
 
 # educator 접근 권한
 def educator_group_check(user):
@@ -29,21 +31,6 @@ def images():
     print(image_list)
 
     return image_list
-
-# 컨테이너 생성
-@user_passes_test(educator_group_check, login_url='/main')
-def make_container(request):
-    image = request.POST.get('image')
-    print('docker run -d -p 8081:80 ' + image)
-    result =  ''
-    result1 = os.popen('docker run --name web1 -d -p 8081:80 ' + image)
-    result2 = os.popen('docker run -d --name web2 -p 8082:80 ' + image)
-    result3 = os.popen('docker run -d --name web3 -p 8083:80 ' + image)
-
-    result = result1.read()[:13]+","+result2.read()[:13]+","+result3.read()[:13]+" was created successfully"
-    print(result)
-
-    return render(request, 'docker/make_container.html', {'result': result})
 
 @user_passes_test(educator_group_check, login_url='/main')
 def upload(request):
@@ -78,7 +65,6 @@ def upload(request):
 
     return render(request, 'main/upload.html',)
 
-
 # 수업 목록
 def index(request):
     page = request.GET.get('page', '1')
@@ -92,10 +78,45 @@ def index(request):
 # 수업 내용
 def detail(request, classroom_id):
     classroom = get_object_or_404(ClassRoom, pk=classroom_id)
-    #print("선택된 이미지 : ",classroom.docker_image)
-    #print("이미지 개수 : ",classroom.container_cnt)
-    context = {'classroom': classroom}
+    #print("선택된 이미지 : ", classroom.docker_image)
+    #print("이미지 개수 : ", classroom.container_cnt)
+    links = classroom.links.split(',')
+    print(links)
+
+    context = {'classroom': classroom, 'links':links}
     return render(request, 'main/classroom_detail.html', context)
+
+# 컨테이너 생성
+@user_passes_test(educator_group_check, login_url='/main')
+def make_container(request, docker_image, container_cnt):
+    f = open("main/port.txt", 'r')
+    ports = deque(f.readline().split())
+    f.close()
+
+    links = ''
+    for _ in range(int(container_cnt)):
+        port = ports.popleft()
+        cmd = 'docker run -d -p ' + port + ':80 ' + str(docker_image)
+        result = os.popen(cmd)
+
+        if _ == int(container_cnt)-1:
+            links += 'http://127.0.0.1:'+port
+        else:
+            links += 'http://127.0.0.1:'+port+','
+        print(result)
+    print(links)
+
+    p = ''
+    for _ in ports:
+        p += _ + ' '
+
+    print(p)
+
+    f = open("main/port.txt", 'w')
+    f.write(p)
+    f.close()
+
+    return links
 
 # 수업 생성
 @user_passes_test(educator_group_check, login_url='/main')
@@ -107,9 +128,11 @@ def classroom_create(request):
             classroom = form.save(commit=False)
             classroom.author = request.user # author 속성에 로그인 계정 저장
             classroom.create_date = timezone.now()
+            print("선택된 이미지 : ", classroom.docker_image)
+            print("이미지 개수 : ", classroom.container_cnt)
+            links = make_container(request, classroom.docker_image, classroom.container_cnt)
+            classroom.links = links
             classroom.save()
-            print("선택된 이미지 : ",classroom.docker_image)
-            print("이미지 개수 : ",classroom.container_cnt)
             return redirect('main:index')
     else:
         form = ClassRoomForm()
@@ -121,7 +144,7 @@ def classroom_create(request):
 def comment_create(request, classroom_id):
     classroom = get_object_or_404(ClassRoom, pk=classroom_id)
     if request.method == "POST":
-        form = CommentForm(request.POST) 
+        form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.author = request.user # author 속성에 로그인 계정 저장
