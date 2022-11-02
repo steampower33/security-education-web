@@ -100,9 +100,9 @@ def make_container(request, docker_image, container_cnt):
         result = os.popen(cmd)
 
         if _ == int(container_cnt)-1:
-            links += 'http://127.0.0.1:'+port
+            links += 'http://168.188.123.173:'+port
         else:
-            links += 'http://127.0.0.1:'+port+','
+            links += 'http://168.188.123.173:'+port+','
         print("생성된 컨테이너 : ", result.read())
     print(links)
 
