@@ -2,16 +2,16 @@
 from collections import deque
 import os
 
-# docker_image = 'nginx'
-# container_cnt = 3
+docker_image = 'nginx'
+container_cnt = 3
 
-# f = open("main/port.txt", 'r')
-# ports = deque(f.readline().split())
-# f.close()
+f = open("main/port.txt", 'r')
+ports = deque(f.readline().split())
+f.close()
 
-# for _ in range(container_cnt):
-#     cmd = 'docker run -d -p ' + ports.popleft() + ':80 ' + str(docker_image)
-#     print(cmd)
+for _ in range(len(ports)):
+    cmd = 'docker run -d -p ' + ports.popleft() + ':80 ' + str(docker_image)
+    print(cmd)
 
 # p = ''
 # for _ in ports:
