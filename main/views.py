@@ -200,19 +200,26 @@ def classroom_delete(request, classroom_id):
         print("컨테이너 Port : ", container_port)
 
         print("ports : ", ports)
-        w = ''
+        p = list()
         if int(container_port) in ports:
             r = os.popen("docker rm -f "+container_id).read().strip()
             print("컨테이너 삭제 결과 : ", r)
 
-            w += container_port + ' '
+            p.append(container_port)
 
         f = open("main/port.txt", 'r')
         port_file = f.readline()
         f.close()
         print(port_file)
         
-        w += port_file
+        w = ''
+        p += port_file.split()
+        for _ in range(len(p)):
+            if _ != len(p)-1:
+                w += p[_]
+            else:
+                w += p[_] + ' '
+        print(w)
         f = open("main/port.txt", 'w')
         f.write(w)
         f.close()
