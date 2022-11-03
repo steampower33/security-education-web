@@ -196,7 +196,7 @@ def classroom_delete(request, classroom_id):
         print("컨테이너 ID : ", container_id)
 
         r = os.popen('docker port '+container_id).read().strip()
-        container_port = r.split('0:')[1]
+        container_port = r.split(':::')[1]
         print("컨테이너 Port : ", container_port)
 
         print("ports : ", ports)
@@ -207,22 +207,22 @@ def classroom_delete(request, classroom_id):
 
             p.append(container_port)
 
-        f = open("main/port.txt", 'r')
-        port_file = f.readline()
-        f.close()
-        print(port_file)
+    f = open("main/port.txt", 'r')
+    port_file = f.readline()
+    f.close()
+    print(port_file)
         
-        w = ''
-        p += port_file.split()
-        for _ in range(len(p)):
-            if _ != len(p)-1:
-                w += p[_]
-            else:
-                w += p[_] + ' '
-        print(w)
-        f = open("main/port.txt", 'w')
-        f.write(w)
-        f.close()
+    w = ''
+    p += port_file.split()
+    for _ in range(len(p)):
+        if _ != len(p)-1:
+            w += p[_]
+        else:
+            w += p[_] + ' '
+    print(w)
+    f = open("main/port.txt", 'w')
+    f.write(w)
+    f.close()
 
     classroom.delete()
     return redirect('main:index')
