@@ -216,9 +216,9 @@ def classroom_delete(request, classroom_id):
     p += port_file.split()
     for _ in range(len(p)):
         if _ != len(p)-1:
-            w += p[_]
-        else:
             w += p[_] + ' '
+        else:
+            w += p[_]
     print(w)
     f = open("main/port.txt", 'w')
     f.write(w)
