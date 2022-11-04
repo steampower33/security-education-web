@@ -12,9 +12,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <a class="navbar-brand" href="{% url 'main:index' %}">
-                <img src="{% static 'img/SecurityClass-logos_black.png' %}" alt="CreamHack" width="60" height="40">
+                <img src="{% static 'img/SecurityClass.png' %}" alt="SecurityClass" width="120" height="30">
             </a>
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                 {% for group in user.groups.all %}
                 {% if group.name == 'educator' %}
                 <li>
@@ -25,8 +25,13 @@
                 {% else %}
                 {% endif %}
                 {% endfor %}
+                <li>
+                    {% if user.is_authenticated %}
+                    <a class="nav-link" href="{% url 'main:list' %}">수업</a>
+                    {% endif %}
+                </li>
             </ul>
-            <ul class="navbar-nav col-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav mb-2 mb-lg-0">
                 <li class="nav-item">
                     {% if user.is_authenticated %}
                     <a class="nav-link" href="{% url 'accounts:logout' %}">{{ user.username }} (로그아웃)</a>

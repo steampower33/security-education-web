@@ -66,7 +66,7 @@ def upload(request):
     return render(request, 'main/upload.html',)
 
 # 수업 목록
-def index(request):
+def list(request):
     page = request.GET.get('page', '1')
     classroom_list = ClassRoom.objects.order_by('-create_date')
     paginator = Paginator(classroom_list, 10)
@@ -74,6 +74,9 @@ def index(request):
     page_obj = paginator.get_page(page)
     context = {'classroom_list': page_obj}
     return render(request, 'main/classroom_list.html', context)
+
+def index(request):
+    return render(request, 'index.html')
 
 # 수업 내용
 def detail(request, classroom_id):
