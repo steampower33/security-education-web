@@ -6,7 +6,10 @@ app_name = 'main'
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('list/', views.list, name='list'),
+    path('classroom/classroom_list', views.classroom_list, name='classroom_list'),
+    path('classroom/classroom_produce', views.classroom_produce, name='classroom_produce'),
+    path('classroom/classroom_attend', views.classroom_attend, name='classroom_attend'),
+    path('post_list/', views.post_list, name='post_list'),
     path('<int:classroom_id>/', views.detail, name='detail'),
     path('comment/create/<int:classroom_id>/', views.comment_create, name='comment_create'),
     path('classroom/create/', views.classroom_create, name='classroom_create'),

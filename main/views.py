@@ -66,14 +66,25 @@ def upload(request):
     return render(request, 'main/upload.html',)
 
 # 수업 목록
-def list(request):
+def post_list(request):
     page = request.GET.get('page', '1')
     classroom_list = ClassRoom.objects.order_by('-create_date')
     paginator = Paginator(classroom_list, 10)
 
     page_obj = paginator.get_page(page)
     context = {'classroom_list': page_obj}
-    return render(request, 'main/classroom_list.html', context)
+    return render(request, 'main/classroom_post_list.html', context)
+
+def classroom_list(request):
+
+    return render(request, 'main/classroom_list.html')
+
+def classroom_produce(request):
+    return render(request, 'main/classroom_produce.html')
+
+def classroom_attend(request):
+    
+    return render(request, 'main/classroom_attend.html')
 
 def index(request):
     return render(request, 'index.html')

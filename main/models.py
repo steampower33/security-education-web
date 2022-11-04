@@ -14,6 +14,12 @@ class ClassRoom(models.Model):
     def __str__(self):
         return self.subject
 
+class Classes(models.Model):
+    educator = models.ForeignKey(User, on_delete=models.CASCADE)
+    class_name = models.CharField(max_length=200)
+    max_learner = models.IntegerField(default=0)
+    learners = models.CharField(max_length=300)
+
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     classroom = models.ForeignKey(ClassRoom, on_delete=models.CASCADE)
