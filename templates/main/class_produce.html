@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h5 class="my-3 border-bottom pb-2">수업등록</h5>
+    <form method="post">
+        {% csrf_token %}
+        {% include "form_errors.html" %}
+        <div class="mb-3">
+            <label for="class_name" class="form-label">수업 이름</label>
+            <input type="text" class="form-control" name="class_name" id="class_name"
+                value="{{ form.class_name.value | default_if_none:'' }}">
+        </div>
+        <div class="mb-3">
+            <label for="max_learner" class="form-label">최대 학생 수</label>
+            <div class="form-group">
+                <select type="number" class="form-control" name="max_learner" id="max_learner">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </select>
+              </div>
+        </div>
+        <div class="mb-3">
+            <label for="code" class="form-label">수업 코드</label>
+            <input type="number" class="form-control" name="code" id="code"
+                value="{{ form.code.value |default_if_none:'' }}">
+        </div>
+        <input type="submit" value="생성" class="btn btn-primary">
+    </form>
+</div>
+{% endblock %}

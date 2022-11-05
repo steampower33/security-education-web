@@ -18,7 +18,9 @@ class Classes(models.Model):
     educator = models.ForeignKey(User, on_delete=models.CASCADE)
     class_name = models.CharField(max_length=200)
     max_learner = models.IntegerField(default=0)
-    learners = models.CharField(max_length=300)
+    learners = models.CharField(max_length=300, null=True, blank=True)
+    code = models.IntegerField(default=0)
+    create_date = models.DateTimeField(null=True)
 
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)

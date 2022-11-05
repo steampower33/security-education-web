@@ -15,12 +15,12 @@
                 <img src="{% static 'img/SecurityClass.png' %}" alt="SecurityClass" width="120" height="30">
             </a>
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                <!-- docker 파일 업로드-->
+                <!-- 교육자 - 수업 생성 -->
                 {% for group in user.groups.all %}
                 {% if group.name == 'educator' %}
                 {% if user.is_authenticated %}
                 <li>
-                    <a class="nav-link" href="{% url 'main:upload' %}">업로드</a>
+                    <a class="nav-link" href="{% url 'main:class_produce' %}">수업 생성</a>
                 </li>
                 {% endif %}
                 {% else %}
@@ -29,26 +29,32 @@
                 <!-- 수업 목록 확인-->
                 <li>
                     {% if user.is_authenticated %}
-                    <a class="nav-link" href="{% url 'main:classroom_list' %}">수업</a>
+                    <a class="nav-link" href="{% url 'main:class_list' %}">수업</a>
                     {% endif %}
                 </li>
-                <!-- 교육자 - 수업 생성 -->
-                {% for group in user.groups.all %}
-                {% if group.name == 'educator' %}
-                {% if user.is_authenticated %}
+                <!-- 모든 수업 목록 확인-->
                 <li>
-                    <a class="nav-link" href="{% url 'main:classroom_produce' %}">수업 생성</a>
+                    {% if user.is_authenticated %}
+                    <a class="nav-link" href="{% url 'main:class_list_all' %}">모든 수업(교육자 용)</a>
+                    {% endif %}
                 </li>
-                {% endif %}
-                {% else %}
-                {% endif %}
-                {% endfor %}
                 <!-- 학습자 - 수업 참여 -->
                 {% for group in user.groups.all %}
                 {% if group.name == 'learner' %}
                 {% if user.is_authenticated %}
                 <li>
-                    <a class="nav-link" href="{% url 'main:classroom_attend' %}">수업 참여</a>
+                    <a class="nav-link" href="{% url 'main:class_attend' %}">수업 참여</a>
+                </li>
+                {% endif %}
+                {% else %}
+                {% endif %}
+                {% endfor %}
+                <!-- docker 파일 업로드-->
+                {% for group in user.groups.all %}
+                {% if group.name == 'educator' %}
+                {% if user.is_authenticated %}
+                <li>
+                    <a class="nav-link" href="{% url 'main:upload' %}">업로드</a>
                 </li>
                 {% endif %}
                 {% else %}

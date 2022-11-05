@@ -17,13 +17,13 @@ class ClassRoomForm(forms.ModelForm):
 class ClassesForm(forms.ModelForm):
     class Meta:
         model = Classes
-        fields = ['educator', 'class_name', 'max_learner', 'learners']
+        fields = ['class_name', 'max_learner', 'learners','code']
 
         labels = {
-            'educator': '교육자',
             'class_name': '수업 이름',
             'max_learner': '최대 학생수',
             'learners': '학생 명단',
+            'code': '수업 코드',
         }
 
 class CommentForm(forms.ModelForm):

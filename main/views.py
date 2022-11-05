@@ -3,8 +3,8 @@ from collections import deque
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
-from .models import ClassRoom, Comment
-from .forms import ClassRoomForm, CommentForm
+from .models import ClassRoom, Comment, Classes
+from .forms import ClassRoomForm, CommentForm, ClassesForm
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
@@ -75,14 +75,38 @@ def post_list(request):
     context = {'classroom_list': page_obj}
     return render(request, 'main/classroom_post_list.html', context)
 
-def classroom_list(request):
-    return render(request, 'main/classroom_list.html')
+def class_list(request):
+    return render(request, 'main/class_list.html')
 
-def classroom_produce(request):
-    return render(request, 'main/classroom_produce.html')
+def class_list_all(request):
+    page = request.GET.get('page', '1')
+    class_list = Classes.objects.order_by('-create_date')
+    paginator = Paginator(class_list, 10)
 
-def classroom_attend(request):
-    return render(request, 'main/classroom_attend.html')
+    learners_len = 0
+    page_obj = paginator.get_page(page)
+    if class_list[0].learners:
+        learners_len = len(class_list[0].learners.split())
+    context = {'class_list': page_obj, 'learners_len': learners_len}
+    return render(request, 'main/class_list_all.html', context)
+
+@user_passes_test(educator_group_check, login_url='/main')
+def class_produce(request):
+    if request.method == 'POST':
+        form = ClassesForm(request.POST)
+        if form.is_valid():
+            classes = form.save(commit=False)
+            classes.educator = request.user # author 속성에 로그인 계정 저장
+            classes.create_date = timezone.now()
+            classes.save()
+            return redirect('main:index')
+    else:
+        form = ClassesForm()
+    context = {'form': form}
+    return render(request, 'main/class_produce.html', context)
+
+def class_attend(request):
+    return render(request, 'main/class_attend.html')
 
 def index(request):
     return render(request, 'index.html')
