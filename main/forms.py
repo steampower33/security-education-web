@@ -1,6 +1,5 @@
 from django import forms
-from main.models import ClassRoom
-from main.models import Comment
+from main.models import ClassRoom, Comment, Classes
 
 class ClassRoomForm(forms.ModelForm):
     class Meta:
@@ -13,6 +12,18 @@ class ClassRoomForm(forms.ModelForm):
             'container_cnt': '컨테이너_개수',
             'docker_image': '이미지',
             'links': '컨테이너링크',
+        }
+
+class ClassesForm(forms.ModelForm):
+    class Meta:
+        model = Classes
+        fields = ['educator', 'class_name', 'max_learner', 'learners']
+
+        labels = {
+            'educator': '교육자',
+            'class_name': '수업 이름',
+            'max_learner': '최대 학생수',
+            'learners': '학생 명단',
         }
 
 class CommentForm(forms.ModelForm):

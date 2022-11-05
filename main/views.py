@@ -76,14 +76,12 @@ def post_list(request):
     return render(request, 'main/classroom_post_list.html', context)
 
 def classroom_list(request):
-
     return render(request, 'main/classroom_list.html')
 
 def classroom_produce(request):
     return render(request, 'main/classroom_produce.html')
 
 def classroom_attend(request):
-    
     return render(request, 'main/classroom_attend.html')
 
 def index(request):
