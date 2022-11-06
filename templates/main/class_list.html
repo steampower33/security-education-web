@@ -8,6 +8,7 @@
   {% endif %}
 
   {% if is_learner %}
+  <h1>참여한 수업</h1>
   <div style="display: flex; flex-direction: row; flex-wrap: wrap">
     {% for c in attend_class_info %}
     {#  Single Card Template:#}
@@ -20,6 +21,7 @@
   </div>
   {% endif %}
   {% if is_educator %}
+  <h1>생성한 수업</h1>
   <div style="display: flex; flex-direction: row; flex-wrap: wrap">
     {% for c in attend_class_info %}
     {#  Single Card Template:#}
