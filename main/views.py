@@ -76,23 +76,37 @@ def post_list(request):
     return render(request, 'main/classroom_post_list.html', context)
 
 def class_list(request):
-    return render(request, 'main/class_list.html')
+    attend_class_info = list()
+    for c in Classes.objects.all():
+        info = dict()
+        if c.learners:
+            if str(request.user) in c.learners:
+                print(request.user,"는 ",c.class_name,"에 등록되어있습니다.")
+                # 교육자, 수업 이름, 현재 학습자 / 총 학습자
+                info['educator'] = str(c.educator)
+                info['class_name'] = str(c.class_name)
+                info['learners_num'] = str(c.learners_num)
+                info['max_learner'] = str(c.max_learner)
+                info['id'] = int(c.id)
+            attend_class_info.append(info)
+            print(attend_class_info)
+
+    context = {'attend_class_info': attend_class_info}
+    return render(request, 'main/class_list.html', context)
 
 def class_list_all(request):
     page = request.GET.get('page', '1')
     class_list = Classes.objects.order_by('-create_date')
     paginator = Paginator(class_list, 10)
 
-    learners_len = 0
     page_obj = paginator.get_page(page)
-    if class_list[0].learners:
-        learners_len = len(class_list[0].learners.split())
-    context = {'class_list': page_obj, 'learners_len': learners_len}
+    context = {'class_list': page_obj}
     return render(request, 'main/class_list_all.html', context)
 
 @user_passes_test(educator_group_check, login_url='/main')
 def class_produce(request):
     if request.method == 'POST':
+        # 중복되는 코드의 수업 존재 유무 체크
         r_code = request.POST['code']
         for c in Classes.objects.all():
             print("등록하려는 수업의 코드 : ", r_code)
@@ -125,6 +139,7 @@ def class_attend(request):
                     c.learners = l + " " + str(request.user)
                 else:
                     c.learners = str(request.user)
+                c.learners_num = len(c.learners.split())
                 c.save()
         return redirect('main:index')
 

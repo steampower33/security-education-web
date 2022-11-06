@@ -19,6 +19,7 @@ class Classes(models.Model):
     class_name = models.CharField(max_length=200)
     max_learner = models.IntegerField(default=0)
     learners = models.CharField(max_length=300, null=True, blank=True)
+    learners_num = models.IntegerField(default=0)
     code = models.IntegerField(default=0)
     create_date = models.DateTimeField(null=True)
 

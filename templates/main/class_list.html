@@ -2,6 +2,16 @@
 {% load main_filter %}
 {% block content %}
 <div class="container my-3">
-    <a href="{% url 'main:class_attend' %}" class="btn btn-primary">수업 등록하기</a>
+  <a href="{% url 'main:class_attend' %}" class="btn btn-primary">수업 등록하기</a>
+  <div style="display: flex; flex-direction: row; flex-wrap: wrap">
+    {% for c in attend_class_info %}
+    {#  Single Card Template:#}
+    <div class="card" style="width: 18rem; margin: 10px">
+      <a href="{% url 'main:post_list' %}">{{ c.class_name }}</a>
+        <p>교육자 :{{ c.educator }}</p>
+        <p>{{ c.learners_num }} / {{ c.max_learner }}</p>
+    </div>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}

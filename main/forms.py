@@ -17,7 +17,7 @@ class ClassRoomForm(forms.ModelForm):
 class ClassesForm(forms.ModelForm):
     class Meta:
         model = Classes
-        fields = ['class_name', 'max_learner', 'learners','code']
+        fields = ['class_name', 'max_learner', 'learners', 'code']
 
         labels = {
             'class_name': '수업 이름',
