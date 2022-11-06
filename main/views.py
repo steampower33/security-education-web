@@ -47,7 +47,7 @@ def upload(request):
         myfile = request.FILES['myfile']
         if str(myfile) in image_list:
             result = str(myfile) + 'is already exist in media'
-            return render(request, 'docker/already.html', {'result': result})
+            return render(request, 'main/already.html', {'result': result})
 
         fs = FileSystemStorage(location='media/', base_url='media/')
         # FileSystemStorage.save(file_name, file_content)
@@ -76,11 +76,38 @@ def post_list(request):
     return render(request, 'main/classroom_post_list.html', context)
 
 def class_list(request):
-    attend_class_info = list()
-    for c in Classes.objects.all():
-        info = dict()
-        if c.learners:
-            if str(request.user) in c.learners:
+    is_educator = False
+    is_learner = False
+    print(request.user.groups.all())
+    for g in request.user.groups.all():
+        if g.name == 'educator':
+            is_educator = True
+        if g.name == 'learner':
+            is_learner = True
+    
+    if is_learner:
+        attend_class_info = list()
+        for c in Classes.objects.all():
+            info = dict()
+            if c.learners:
+                if str(request.user) in c.learners:
+                    print(request.user,"는 ",c.class_name,"에 등록되어있습니다.")
+                    # 교육자, 수업 이름, 현재 학습자 / 총 학습자
+                    info['educator'] = str(c.educator)
+                    info['class_name'] = str(c.class_name)
+                    info['learners_num'] = str(c.learners_num)
+                    info['max_learner'] = str(c.max_learner)
+                    info['id'] = int(c.id)
+                if not info:
+                    print("?")
+                else:
+                    attend_class_info.append(info)
+                    print(attend_class_info)
+    elif is_educator:
+        attend_class_info = list()
+        for c in Classes.objects.all():
+            info = dict()
+            if str(c.educator) == str(request.user):
                 print(request.user,"는 ",c.class_name,"에 등록되어있습니다.")
                 # 교육자, 수업 이름, 현재 학습자 / 총 학습자
                 info['educator'] = str(c.educator)
@@ -88,10 +115,13 @@ def class_list(request):
                 info['learners_num'] = str(c.learners_num)
                 info['max_learner'] = str(c.max_learner)
                 info['id'] = int(c.id)
-            attend_class_info.append(info)
-            print(attend_class_info)
+            if not info:
+                print("?")
+            else:
+                attend_class_info.append(info)
+                print(attend_class_info)
 
-    context = {'attend_class_info': attend_class_info}
+    context = {'attend_class_info': attend_class_info, 'is_educator': is_educator, 'is_learner': is_learner}
     return render(request, 'main/class_list.html', context)
 
 def class_list_all(request):
@@ -206,7 +236,7 @@ def classroom_create(request):
             links = make_container(request, classroom.docker_image, classroom.container_cnt)
             classroom.links = links
             classroom.save()
-            return redirect('main:index')
+            return redirect('main:post_list')
     else:
         form = ClassRoomForm()
     context = {'form': form, 'image_list': image_list}
@@ -269,7 +299,7 @@ def classroom_delete(request, classroom_id):
         print("컨테이너 ID : ", container_id)
 
         r = os.popen('docker port '+container_id).read().strip()
-        container_port = r.split(':::')[1]
+        container_port = r.split(':')[1]
         print("컨테이너 Port : ", container_port)
 
         print("ports : ", ports)

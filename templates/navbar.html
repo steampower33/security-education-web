@@ -27,23 +27,17 @@
                 {% endif %}
                 {% endfor %}
                 <!-- 수업 목록 확인-->
-                <li>
-                    {% if user.is_authenticated %}
-                    <a class="nav-link" href="{% url 'main:class_list' %}">수업</a>
-                    {% endif %}
-                </li>
-                <!-- 모든 수업 목록 확인-->
-                <li>
-                    {% if user.is_authenticated %}
-                    <a class="nav-link" href="{% url 'main:class_list_all' %}">모든 수업(교육자 용)</a>
-                    {% endif %}
-                </li>
-                <!-- 학습자 - 수업 참여 -->
-                {% for group in user.groups.all %}
-                {% if group.name == 'learner' %}
                 {% if user.is_authenticated %}
                 <li>
-                    <a class="nav-link" href="{% url 'main:class_attend' %}">수업 참여</a>
+                    <a class="nav-link" href="{% url 'main:class_list' %}">수업</a>
+                </li>
+                {% endif %}
+                <!-- 모든 수업 목록 확인-->
+                {% for group in user.groups.all %}
+                {% if group.name == 'educator' %}
+                {% if user.is_authenticated %}
+                <li>
+                    <a class="nav-link" href="{% url 'main:class_list_all' %}">모든 수업(교육자 용)</a>
                 </li>
                 {% endif %}
                 {% else %}
