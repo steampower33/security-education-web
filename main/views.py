@@ -93,6 +93,13 @@ def class_list_all(request):
 @user_passes_test(educator_group_check, login_url='/main')
 def class_produce(request):
     if request.method == 'POST':
+        r_code = request.POST['code']
+        for c in Classes.objects.all():
+            print("등록하려는 수업의 코드 : ", r_code)
+            print("c의 수업 코드", c.code)
+            if c.code == int(r_code):
+                print("중복되는 코드의 수업이 이미 존재합니다.")
+                return redirect('main:index')
         form = ClassesForm(request.POST)
         if form.is_valid():
             classes = form.save(commit=False)
@@ -106,6 +113,21 @@ def class_produce(request):
     return render(request, 'main/class_produce.html', context)
 
 def class_attend(request):
+    if request.method == 'POST':
+        r_code = request.POST['code']
+        print("등록하려는 수업의 코드 : ", r_code)
+        for c in Classes.objects.all():
+            print(c,"의 코드는",c.code)
+            if c.code == int(r_code):
+                print("코드가 동일합니다.")
+                l = c.learners
+                if l:
+                    c.learners = l + " " + str(request.user)
+                else:
+                    c.learners = str(request.user)
+                c.save()
+        return redirect('main:index')
+
     return render(request, 'main/class_attend.html')
 
 def index(request):

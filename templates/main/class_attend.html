@@ -6,9 +6,9 @@
         {% csrf_token %}
         {% include "form_errors.html" %}
         <div class="mb-3">
-            <label for="subject" class="form-label">코드</label>
-            <input type="text" class="form-control" name="subject" id="subject"
-                value="{{ form.subject.value|default_if_none:'' }}">
+            <label for="code" class="form-label">코드</label>
+            <input type="number" class="form-control" name="code" id="code"
+                value="0">
         </div>
         <input type="submit" value="수업 등록" class="btn btn-primary">
     </form>

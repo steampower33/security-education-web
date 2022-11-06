@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% load main_filter %}
 {% block content %}
-
+<div class="container my-3">
+    <a href="{% url 'main:class_attend' %}" class="btn btn-primary">수업 등록하기</a>
+</div>
 {% endblock %}
