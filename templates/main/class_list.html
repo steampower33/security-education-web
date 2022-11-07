@@ -13,7 +13,7 @@
     {% for c in attend_class_info %}
     {#  Single Card Template:#}
     <div class="card" style="width: 18rem; margin: 10px">
-      <a href="{% url 'main:post_list' %}">{{ c.class_name }}</a>
+      <a href="{% url 'main:post_list' c.code %}">{{ c.class_name }}</a>
         <p>교육자 :{{ c.educator }}</p>
         <p>{{ c.learners_num }} / {{ c.max_learner }}</p>
     </div>
@@ -26,7 +26,7 @@
     {% for c in attend_class_info %}
     {#  Single Card Template:#}
     <div class="card" style="width: 18rem; margin: 10px">
-      <a href="{% url 'main:post_list' %}">{{ c.class_name }}</a>
+      <a href="{% url 'main:post_list' c.code %}">{{ c.class_name }}</a>
         <p>교육자 :{{ c.educator }}</p>
         <p>{{ c.learners_num }} / {{ c.max_learner }}</p>
     </div>

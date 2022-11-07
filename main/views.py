@@ -66,10 +66,13 @@ def upload(request):
     return render(request, 'main/upload.html',)
 
 # 수업 목록
-def post_list(request):
+def post_list(request, class_code):
     page = request.GET.get('page', '1')
+
     classroom_list = ClassRoom.objects.order_by('-create_date')
     paginator = Paginator(classroom_list, 10)
+
+    print(request.POST)
 
     page_obj = paginator.get_page(page)
     context = {'classroom_list': page_obj}
@@ -98,6 +101,7 @@ def class_list(request):
                     info['learners_num'] = str(c.learners_num)
                     info['max_learner'] = str(c.max_learner)
                     info['id'] = int(c.id)
+                    info['code'] = int(c.code)
                 if not info:
                     print("?")
                 else:
@@ -115,6 +119,7 @@ def class_list(request):
                 info['learners_num'] = str(c.learners_num)
                 info['max_learner'] = str(c.max_learner)
                 info['id'] = int(c.id)
+                info['code'] = int(c.code)
             if not info:
                 print("?")
             else:
