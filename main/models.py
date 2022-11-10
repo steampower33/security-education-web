@@ -19,7 +19,7 @@ class ClassRoom(models.Model):
     create_date = models.DateTimeField()
     modify_date = models.DateTimeField(null=True, blank=True)
     links = models.CharField(max_length=300, null=True, blank=True)
-    # classes = models.ForeignKey(Classes, on_delete=models.CASCADE)
+    class_code = models.IntegerField(default=0)
 
     def __str__(self):
         return self.subject

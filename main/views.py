@@ -65,19 +65,20 @@ def upload(request):
 
     return render(request, 'main/upload.html',)
 
-# 수업 목록
+# 게시글 목록
 def post_list(request, class_code):
     page = request.GET.get('page', '1')
 
-    classroom_list = ClassRoom.objects.order_by('-create_date')
+    classroom_list = ClassRoom.objects.order_by('-create_date').filter(class_code=class_code)
     paginator = Paginator(classroom_list, 10)
 
-    print(request.POST)
+    print(class_code)
 
     page_obj = paginator.get_page(page)
-    context = {'classroom_list': page_obj}
+    context = {'classroom_list': page_obj, 'class_code':class_code}
     return render(request, 'main/classroom_post_list.html', context)
 
+# 수업 목록
 def class_list(request):
     is_educator = False
     is_learner = False
@@ -189,7 +190,8 @@ def detail(request, classroom_id):
     #print("선택된 이미지 : ", classroom.docker_image)
     #print("이미지 개수 : ", classroom.container_cnt)
     links = classroom.links.split(',')
-    print(links)
+    print("컨테이너 주소 : ", links)
+    print("게시글 코드 : ", classroom.class_code)
 
     context = {'classroom': classroom, 'links':links}
     return render(request, 'main/classroom_detail.html', context)
@@ -228,7 +230,7 @@ def make_container(request, docker_image, container_cnt):
 
 # 수업 생성
 @user_passes_test(educator_group_check, login_url='/main')
-def classroom_create(request):
+def classroom_create(request, class_code):
     image_list = images() # images 정보 가져오기
     if request.method == 'POST':
         form = ClassRoomForm(request.POST)
@@ -236,12 +238,13 @@ def classroom_create(request):
             classroom = form.save(commit=False)
             classroom.author = request.user # author 속성에 로그인 계정 저장
             classroom.create_date = timezone.now()
+            classroom.class_code = class_code
             print("선택된 이미지 : ", classroom.docker_image)
             print("이미지 개수 : ", classroom.container_cnt)
             links = make_container(request, classroom.docker_image, classroom.container_cnt)
             classroom.links = links
             classroom.save()
-            return redirect('main:post_list')
+            return redirect('main:post_list', class_code=class_code)
     else:
         form = ClassRoomForm()
     context = {'form': form, 'image_list': image_list}
