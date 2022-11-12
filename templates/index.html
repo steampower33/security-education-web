@@ -1,12 +1,35 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<div class="d-flex justify-content-center">
-    {% comment %} <img class="p-3" src="{% static 'img/SecurityClass-logos_black.png' %}" alt="SecurityClass" width="600" height="400">  {% endcomment %}
-    <div class="p-5">
-        <p class="h1">보안 교육 시스템</p>
-        <p>학습자와 교육자를 위한 수업 공간</p>
-        <p>도커를 통한 실습 환경 제공</p>
+<div class="container mt-4 d-flex justify-content-center">
+    <div class="row g-0">
+        <div class="col-md-4 border-right">
+            <div class="cards cards-custom">
+                <div class="first bg-white px-1 py-5 text-center">
+                    <img src="{% static 'img/man.png' %}" width="128" height="128">
+                    <h5 class="h5-custom">User의 OS에 상관없이</h5>
+                    <p class="line1">실습을 제공받아, 진행</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 border-right">
+            <div class="cards cards-custom">
+                <div class="second bg-white px-1 py-5 text-center">
+                    <img src="{% static 'img/group.png' %}" width="128" height="128">
+                    <h5 class="h5-custom">교육자와 학습자</h5>
+                    <p class="line1">하나의 실습 공간에서 수업을 진행</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="cards cards-custom">
+                <div class="third bg-white px-1 py-5 text-center">
+                    <img src="{% static 'img/docker.png' %}" width="128" height="128">
+                    <h5 class="h5-custom">Docker를 통해 실습 제공</h5>
+                    <p class="line1">Docker를 이용하여 학습자에게 실습을 제공</p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -1,29 +1,54 @@
 @font-face {
     font-family: 'Tenada';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2210-2@1.0/Tenada.woff2') format('woff2');
+    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2210-2@1.0/Tenada.woff2") format('woff2');
     font-weight: normal;
     font-style: normal;
 }
 
-.navbar{
+.navbar {
     font-size: 1.3em;
 }
 
-.navbar-brand{
+.navbar-brand {
     font-size: 1.5em;
+    padding-bottom: 0.0rem;
 }
 
-.navbar-nav .nav-link{
+.navbar-nav .nav-link {
     color: black;
 }
 
 .navbar-light .navbar-nav .nav-link {
     color: rgba(0, 0, 0, 0.5);
-    padding-bottom: .1rem;
-    border-bottom: .1rem solid transparent;
+    padding-bottom: 0.0rem;
+    border-bottom: 0.1rem solid transparent;
 }
 
-.navbar-light .navbar-nav .nav-link:hover, .navbar-light .navbar-nav .nav-link:focus {
+.navbar-light .navbar-nav .nav-link:focus,
+.navbar-light .navbar-nav .nav-link:hover {
     color: rgba(0, 0, 0, 0.7);
     border-bottom-color: rgba(0, 0, 0, 0.7);
+}
+
+.line1 {
+    color: #000;
+    font-size: 12px;
+}
+
+.cards {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.cards-custom {
+    width: 15rem;
+}
+
+.cards:hover {
+    box-shadow: 5px 6px 6px 2px #e9ecef;
+    transform: scale(1.1);
+}
+
+.h5-custom{
+    margin-top:12px;
 }
