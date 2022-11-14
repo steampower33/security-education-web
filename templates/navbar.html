@@ -27,11 +27,14 @@
                 {% endif %}
                 {% endfor %}
                 <!-- 수업 목록 확인-->
-                {% if user.is_authenticated %}
+                {% for group in user.groups.all %}
+                {% if group.name == 'educator' or group.name == 'learner' %}
                 <li>
                     <a class="nav-link" href="{% url 'main:class_list' %}">수업</a>
                 </li>
+                {% else %}
                 {% endif %}
+                {% endfor %}
                 <!-- 모든 수업 목록 확인-->
                 {% for group in user.groups.all %}
                 {% if group.name == 'educator' %}
