@@ -4,7 +4,6 @@
   <h1 class="display-1">이미지 업로드</h1>
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    {% include "form_errors.html" %}
     <input type="file" class="form-control" name="myfile" id="file" accept=".tar">
     <button type="submit" class="btn btn-primary">파일 업로드</button>
   </form>

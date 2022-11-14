@@ -20,7 +20,7 @@
                 {% if group.name == 'educator' %}
                 {% if user.is_authenticated %}
                 <li>
-                    <a class="nav-link" href="{% url 'main:class_produce' %}">수업 생성</a>
+                    <a class="nav-link" href="{% url 'main:class_create' %}">수업 생성</a>
                 </li>
                 {% endif %}
                 {% else %}

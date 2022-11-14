@@ -29,7 +29,7 @@
   </div>
   {% endif%}
 
-  {% if user.is_authenticated %}
+  {% if is_learner %}
   <a href="{% url 'main:class_attend' %}" class="btn btn-primary">수업 등록하기</a>
   {% endif %}
 </div>

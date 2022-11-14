@@ -95,7 +95,7 @@ def class_list(request):
             info = dict()
             if c.learners:
                 if str(request.user) in c.learners:
-                    print(request.user,"는 ",c.class_name,"에 등록되어있습니다.")
+                    #print(request.user,"는 ",c.class_name,"에 등록되어있습니다.")
                     # 교육자, 수업 이름, 현재 학습자 / 총 학습자
                     info['educator'] = str(c.educator)
                     info['class_name'] = str(c.class_name)
@@ -107,13 +107,13 @@ def class_list(request):
                     print("?")
                 else:
                     attend_class_info.append(info)
-                    print(attend_class_info)
+                    #print(attend_class_info)
     elif is_educator:
         attend_class_info = list()
         for c in Classes.objects.all():
             info = dict()
             if str(c.educator) == str(request.user):
-                print(request.user,"는 ",c.class_name,"에 등록되어있습니다.")
+                #print(request.user,"는 ",c.class_name,"에 등록되어있습니다.")
                 # 교육자, 수업 이름, 현재 학습자 / 총 학습자
                 info['educator'] = str(c.educator)
                 info['class_name'] = str(c.class_name)
@@ -125,11 +125,12 @@ def class_list(request):
                 print("?")
             else:
                 attend_class_info.append(info)
-                print(attend_class_info)
+                #print(attend_class_info)
 
     context = {'attend_class_info': attend_class_info, 'is_educator': is_educator, 'is_learner': is_learner}
     return render(request, 'main/class_list.html', context)
 
+# 모든 수업 확인(관리자용)
 def class_list_all(request):
     page = request.GET.get('page', '1')
     class_list = Classes.objects.order_by('-create_date')
@@ -139,8 +140,9 @@ def class_list_all(request):
     context = {'class_list': page_obj}
     return render(request, 'main/class_list_all.html', context)
 
+# 수업 생성
 @user_passes_test(educator_group_check, login_url='/main')
-def class_produce(request):
+def class_create(request):
     if request.method == 'POST':
         # 중복되는 코드의 수업 존재 유무 체크
         r_code = request.POST['code']
@@ -160,8 +162,23 @@ def class_produce(request):
     else:
         form = ClassesForm()
     context = {'form': form}
-    return render(request, 'main/class_produce.html', context)
+    return render(request, 'main/class_create.html', context)
 
+# 수업 삭제
+def class_delete(request, class_code):
+    print("수업 삭제 구현중")
+    print("수업 코드는 ",class_code)
+    for c in ClassRoom.objects.all():
+        print("이 게시물의 수업 코드는", c.class_code)
+        if class_code == c.class_code:
+            print("코드가 일치합니다. 해당 게시물을 삭제합니다.")
+            classroom_delete(request, c.id)
+
+    Class = get_object_or_404(Classes, code=class_code)
+    Class.delete()
+    return redirect('main:class_list')
+
+# 수업 참가
 def class_attend(request):
     if request.method == 'POST':
         r_code = request.POST['code']
@@ -181,6 +198,7 @@ def class_attend(request):
 
     return render(request, 'main/class_attend.html')
 
+# 메인 페이지
 def index(request):
     return render(request, 'index.html')
 
@@ -228,7 +246,7 @@ def make_container(request, docker_image, container_cnt):
 
     return links
 
-# 수업 생성
+# 수업 게시글 생성
 @user_passes_test(educator_group_check, login_url='/main')
 def classroom_create(request, class_code):
     image_list = images() # images 정보 가져오기
@@ -268,7 +286,7 @@ def comment_create(request, classroom_id):
     context = {'classroom': classroom, 'form': form}
     return render(request, 'main/classroom_detail.html', context)
 
-# 수업 수정
+# 수업 게시글 수정
 @user_passes_test(educator_group_check, login_url='/main')
 def classroom_modify(request, classroom_id):
     classroom = get_object_or_404(ClassRoom, pk=classroom_id)
@@ -289,7 +307,7 @@ def classroom_modify(request, classroom_id):
     context = {'classroom':classroom, 'form': form, 'image_list': image_list}
     return render(request, 'main/classroom_form.html', context)
 
-# 수업 삭제
+# 수업 게시글 삭제
 @user_passes_test(educator_group_check, login_url='/main')
 def classroom_delete(request, classroom_id):
     classroom = get_object_or_404(ClassRoom, pk=classroom_id)
@@ -336,7 +354,7 @@ def classroom_delete(request, classroom_id):
     f.close()
 
     classroom.delete()
-    return redirect('main:index')
+    return redirect('main:post_list', class_code=classroom.class_code)
 
 # 댓글 수정
 @login_required(login_url='common:login')
