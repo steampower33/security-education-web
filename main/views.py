@@ -325,7 +325,10 @@ def classroom_delete(request, classroom_id):
         print("컨테이너 ID : ", container_id)
 
         r = os.popen('docker port '+container_id).read().strip()
-        container_port = r.split(':')[1]
+        print(r)
+        print(r.split("\n")[0].split(':')[1])
+        #return redirect('main:post_list', class_code=classroom.class_code)
+        container_port = r.split("\n")[0].split(':')[1]
         print("컨테이너 Port : ", container_port)
 
         print("ports : ", ports)
