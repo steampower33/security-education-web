@@ -2,18 +2,13 @@
 {% load main_filter %}
 {% block content %}
 <div class="container my-3">
-
-  {% if user.is_authenticated %}
-  <a href="{% url 'main:class_attend' %}" class="btn btn-primary">수업 등록하기</a>
-  {% endif %}
-
   {% if is_learner %}
   <h1>참여한 수업</h1>
   <div style="display: flex; flex-direction: row; flex-wrap: wrap">
     {% for c in attend_class_info %}
     {#  Single Card Template:#}
     <div class="card" style="width: 18rem; margin: 10px">
-      <a href="{% url 'main:post_list' c.code %}">{{ c.class_name }}</a>
+      <a class="h2" href="{% url 'main:post_list' c.code %}">{{ c.class_name }}</a>
         <p>교육자 :{{ c.educator }}</p>
         <p>{{ c.learners_num }} / {{ c.max_learner }}</p>
     </div>
@@ -25,13 +20,17 @@
   <div style="display: flex; flex-direction: row; flex-wrap: wrap">
     {% for c in attend_class_info %}
     {#  Single Card Template:#}
-    <div class="card" style="width: 18rem; margin: 10px">
-      <a href="{% url 'main:post_list' c.code %}">{{ c.class_name }}</a>
-        <p>교육자 :{{ c.educator }}</p>
-        <p>{{ c.learners_num }} / {{ c.max_learner }}</p>
+    <div class="card" style="margin: 8px">
+      <a class="h2" style="margin: 8px; relative" href="{% url 'main:post_list' c.code %}">{{ c.class_name }}</a>
+      <p style="margin: 8px;">교육자 : {{ c.educator }}</p>
+      <p style="margin: 8px;">{{ c.learners_num }} / {{ c.max_learner }}</p>
     </div>
     {% endfor %}
   </div>
   {% endif%}
+
+  {% if user.is_authenticated %}
+  <a href="{% url 'main:class_attend' %}" class="btn btn-primary">수업 등록하기</a>
+  {% endif %}
 </div>
 {% endblock %}

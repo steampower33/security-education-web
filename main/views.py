@@ -43,7 +43,7 @@ def upload(request):
 
     image_list = os.listdir(media_path)
     result = ''
-    if request.method == 'POST' and request.FILES['myfile']:
+    if request.method == 'POST' and 'myfile' in request.FILES:
         myfile = request.FILES['myfile']
         if str(myfile) in image_list:
             result = str(myfile) + 'is already exist in media'
