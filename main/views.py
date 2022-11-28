@@ -277,10 +277,15 @@ def make_container(request, docker_image, container_cnt):
 def classroom_create(request, class_code):
     image_list = images() # images 정보 가져오기
 
+
     for c in Classes.objects.all():
         if c.code == class_code:
             attend_learner = c.learners.split()
             learners_num = c.learners_num
+
+            if c.learners_num == 0:
+                print("현재 수업에 학습자가 없습니다. 학습자의 참여 이후 수업을 게시하세요.")
+                return redirect('main:post_list', class_code=class_code)
             max_learners_num = c.max_learner
             print(attend_learner)
             print(learners_num)
