@@ -42,9 +42,10 @@
         <div class="card-body">
             <div class="mb-2">생성된 컨테이너</div>
             <div class="d-flex flex-column">
-            {% for link in links %}
-                <a type="button" href={{ link }} class="btn btn-success">{{ link }}</a>
-                <br>
+            {% for key, value in learners_links.items %}
+                {% if key == request.user.username %}
+                <a type="button" href={{ value }} class="btn btn-success">{{ value }}</a>
+                {% endif %}
             {% endfor %}
             </div>
         </div>

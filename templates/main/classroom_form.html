@@ -15,7 +15,7 @@
             <textarea type="text" class="form-control" name="content" id="content" rows="10"
                 value="{{ form.content.value|default_if_none:'' }}"></textarea>
         </div>
-        <div class="mb-3">
+        {% comment %} <div class="mb-3">
             <label for="container_cnt" class="form-label">컨테이너 개수</label>
             <div class="form-group">
                 <select type="number" class="form-control" name="container_cnt" id="container_cnt">
@@ -24,7 +24,7 @@
                   <option>3</option>
                 </select>
               </div>
-        </div>
+        </div> {% endcomment %}
         <div class="my-3">
             <label for="container_cnt" class="form-label">이미지 목록</label>
             <select class="form-control" name="docker_image" id="docker_image" autofocus>

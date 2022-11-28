@@ -210,8 +210,34 @@ def detail(request, classroom_id):
     links = classroom.links.split(',')
     print("컨테이너 주소 : ", links)
     print("게시글 코드 : ", classroom.class_code)
+    
+    is_educator = False
+    is_learner = False
+    
+    for g in request.user.groups.all():
+        if g.name == 'educator':
+            is_educator = True
+        if g.name == 'learner':
+            is_learner = True
+            
+    for c in Classes.objects.all():
+        if c.code == classroom.class_code:
+            attend_learner = c.learners.split()
+            learners_num = c.learners_num
+            max_learners_num = c.max_learner
+            # print(attend_learner)
+            # print(learners_num)
+            # print(max_learners_num)
+    
+    print(request.user.username)
+    
+    print(attend_learner)
+    print(links)
+    learners_links = dict()
+    for _ in range(len(attend_learner)):
+        learners_links[attend_learner[_]] = links[_]
 
-    context = {'classroom': classroom, 'links':links}
+    context = {'classroom': classroom, 'links':links, 'learners_links':learners_links}
     return render(request, 'main/classroom_detail.html', context)
 
 # 컨테이너 생성
@@ -250,6 +276,16 @@ def make_container(request, docker_image, container_cnt):
 @user_passes_test(educator_group_check, login_url='/main')
 def classroom_create(request, class_code):
     image_list = images() # images 정보 가져오기
+
+    for c in Classes.objects.all():
+        if c.code == class_code:
+            attend_learner = c.learners.split()
+            learners_num = c.learners_num
+            max_learners_num = c.max_learner
+            print(attend_learner)
+            print(learners_num)
+            print(make_container)
+
     if request.method == 'POST':
         form = ClassRoomForm(request.POST)
         if form.is_valid():
@@ -257,9 +293,10 @@ def classroom_create(request, class_code):
             classroom.author = request.user # author 속성에 로그인 계정 저장
             classroom.create_date = timezone.now()
             classroom.class_code = class_code
+            classroom.container_cnt = max_learners_num
             print("선택된 이미지 : ", classroom.docker_image)
             print("이미지 개수 : ", classroom.container_cnt)
-            links = make_container(request, classroom.docker_image, classroom.container_cnt)
+            links = make_container(request, classroom.docker_image, max_learners_num)
             classroom.links = links
             classroom.save()
             return redirect('main:post_list', class_code=class_code)
