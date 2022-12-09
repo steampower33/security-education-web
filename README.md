@@ -1,5 +1,17 @@
 # security-education-web
 
+<p align="center">
+  <img src="https://img.shields.io/github/license/steampower33/security-education-web?style=flat-square" />
+  <img src="https://img.shields.io/github/forks/steampower33/security-education-web?style=flat-square" />
+  <img src="https://img.shields.io/github/stars/steampower33/security-education-web?style=flat-square" />
+<br>
+  <img src="https://img.shields.io/github/contributors/steampower33/security-education-web?style=flat-square" />
+  <img src="https://img.shields.io/github/issues/steampower33/security-education-web?style=flat-square" />
+  <img src="https://img.shields.io/github/issues-pr/steampower33/security-education-web?style=flat-square" />
+  <img src="https://img.shields.io/github/last-commit/steampower33/security-education-web?style=flat-square" />
+  <img src="https://img.shields.io/github/commit-activity/w/steampower33/security-education-web?style=flat-square" />
+</p>
+
 시연 영상 : https://www.youtube.com/watch?v=1UUHcgWi4zk
 
 졸업 작품으로써 보안 관련 실습 환경을 제공하는 사이트 입니다.
